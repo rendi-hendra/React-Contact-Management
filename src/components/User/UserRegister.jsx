@@ -18,22 +18,17 @@ export default function UserRegister() {
       return;
     }
 
-    const response = await userRegister({
-      username: username,
-      password: password,
-      name: name,
-    });
-
-    const responseBody = await response.json();
-
-    if (response.status === 200) {
-      console.log(responseBody.data);
-      await alertSuccess("User created successfully");
-      await navigate({
-        pathname: "/login",
-      });
-    } else {
-      const responseError = responseBody.errors.issues[0].message;
+    try {
+      const response = await userRegister({ username, password, name });
+      if (response.status === 200) {
+        console.log(response.data.data);
+        await alertSuccess("User created successfully");
+        await navigate({
+          pathname: "/login",
+        });
+      }
+    } catch (error) {
+      const responseError = error.response.data.errors.issues[0].message;
       await alertError(responseError);
     }
   }
