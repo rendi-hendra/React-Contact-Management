@@ -2,6 +2,7 @@ import { useState } from "react";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { userRegister } from "./../../lib/api/UserApi";
 import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export default function UserRegister() {
   const [username, setUsername] = useState("");
@@ -20,6 +21,7 @@ export default function UserRegister() {
 
     try {
       const response = await userRegister({ username, password, name });
+      console.log(response.data);
       if (response.status === 200) {
         console.log(response.data.data);
         await alertSuccess("User created successfully");
@@ -28,8 +30,9 @@ export default function UserRegister() {
         });
       }
     } catch (error) {
-      const responseError = error.response.data.errors.issues[0].message;
-      await alertError(responseError);
+      const responseError = error.response.data.errors;
+      toast.error(responseError);
+      console.log(responseError);
     }
   }
 
@@ -145,6 +148,7 @@ export default function UserRegister() {
             <button
               type="submit"
               className="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5"
+              // onClick={(e) => console.log("test")}
             >
               <i className="fas fa-user-plus mr-2"></i> Register
             </button>

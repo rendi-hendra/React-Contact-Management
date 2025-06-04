@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { userLogin } from "../../lib/api/UserApi";
-import { alertError } from "../../lib/alert";
 import { useLocalStorage } from "react-use";
+import { toast } from "react-toastify";
 
 export default function UserLogin() {
   const [username, setUsername] = useState("");
@@ -17,13 +17,15 @@ export default function UserLogin() {
       if (response.status === 200) {
         const token = response.data.data.token;
         setToken(token);
+        toast.success("Login success");
+        console.log(token);
         await navigate({
           pathname: "/dashboard",
         });
       }
     } catch (error) {
       const responseError = error.response.data.errors;
-      await alertError(responseError);
+      toast.error(responseError);
     }
   }
 
